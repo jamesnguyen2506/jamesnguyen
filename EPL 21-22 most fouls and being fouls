@@ -1,0 +1,72 @@
+--Team with most fouls
+WITH Home_fouls AS
+(
+    SELECT
+        HomeTeam,
+        SUM(HF) AS Total_home_fouls,
+        SUM(HY) AS Total_home_YC,
+        SUM(HR) AS Total_home_RC
+    FROM
+        `soccer21-22`
+    GROUP BY HomeTeam
+)
+, Away_fouls AS
+(
+    SELECT
+        AwayTeam,
+        SUM(AF) AS Total_away_fouls,
+        SUM(AY) AS Total_away_YC,
+        SUM(AR) AS Total_away_RC
+    FROM
+        `soccer21-22`
+    GROUP BY AwayTeam
+)
+SELECT
+    h.HomeTeam AS Team,
+    (Total_home_fouls + Total_away_fouls) AS Total_fouls,
+    (Total_home_YC + Total_away_YC) AS Total_yellow_card,
+    (Total_home_RC + Total_away_RC) AS Total_red_card
+FROM
+    Home_fouls h 
+        JOIN
+    Away_fouls a ON h.HomeTeam = a.AwayTeam
+ORDER BY Total_fouls DESC
+-------------------------------------------------------------------------------------------------------------------
+--Team with most being fouls
+WITH Home_being_fouls AS
+(
+    SELECT
+        HomeTeam,
+        SUM(AF) AS Total_home_being_fouls
+    FROM
+        `soccer21-22`
+    GROUP BY HomeTeam
+)
+, Away_being_fouls AS
+(
+    SELECT
+        AwayTeam,
+        SUM(HF) AS Total_away_being_fouls
+    FROM
+        `soccer21-22`
+    GROUP BY AwayTeam
+)
+SELECT
+    h.HomeTeam AS Team,
+    (Total_home_being_fouls + Total_away_being_fouls) AS Total_being_fouls
+FROM
+    Home_being_fouls h 
+        JOIN
+    Away_being_fouls a ON h.HomeTeam = a.AwayTeam
+ORDER BY Total_being_fouls DESC
+
+
+
+
+
+
+
+
+
+
+
